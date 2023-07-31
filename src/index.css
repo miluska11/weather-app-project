@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwindcss /forms
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+body {
+  font-family: Raleway;
+}
+
+.form-container {
+  background: url("./assets/Cloud-background.png") no-repeat 50% 15%;
+  background-color: #1e213a;
+}
+.form-container-SideBar {
+  background-color: #1e213a;
+}
+
+.bg-color-card-info {
+  background-color: #100e1d;
+}
+.bg-color-summarycard {
+  background-color: #1e213a;
+}
+
+.text-items-lower {
+  color: #88869d;
+}
+.text-color-description {
+  color: #a09fb1;
+}
+.creation-footer {
+  color: #a09fb1;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bg-color-total-info {
+  color: #e7e7eb;
+}
+.bg-color-text-mintemp {
+  color:#A09FB1 ;
+}
