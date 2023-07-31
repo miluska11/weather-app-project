@@ -5,7 +5,7 @@ function SummaryCard({ day }) {
     import.meta.env.VITE_APP_ICON_URL + day.weather[0]["icon"]
   }@2x.png`;
   return (
-    <li className="p-4 flex h-44  max-[1003px]:h-56 container h-64 justify-center text-center bg-color-summarycard my-auto ">
+    <li className="p-4 container h-64 flex justify-center text-center bg-color-summarycard rounded-lg my-auto ">
       <div className="my-auto">
         <p className="tracking-wider ">{moment().format("dddd D MMM")}</p>
 

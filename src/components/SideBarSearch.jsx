@@ -36,8 +36,9 @@ export function SideBarSearch({
               </svg>
             </button>
           </div>
-          <div className=" px-12 mx-auto mt-8">
+          <div class=" px-12 mx-auto mt-8">
             <form
+              class="flex"
               noValidate
               onSubmit={handleSubmit}
               className="flex justify-center w-full"

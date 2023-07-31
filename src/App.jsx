@@ -13,23 +13,25 @@ function App() {
   const [noData, setNoData] = useState("No Data");
   const [searchTerm, setSearchTerm] = useState("");
   const [weatherData, setWeatherData] = useState([]);
-  console.log(weatherData);
   const [open, setOpen] = useState(false);
   const [city, setCity] = useState("Unknown location");
   const [weatherIcon, setWeatherIcon] = useState(
     `${import.meta.env.VITE_APP_ICON_URL}10n@2x.png`
   );
-
-  const handleChange = (input) => {
-    const { value } = input.target;
-    setSearchTerm(value);
-  };
   const handleClick = () => {
     setOpen();
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     getWeather(searchTerm);
+  };
+  const handlePosition = () => {
+    getWeather("lima");
+  };
+  const handleChange = (input) => {
+    const { value } = input.target;
+    setSearchTerm(value);
   };
 
   const getWeather = async (location) => {
@@ -62,9 +64,17 @@ function App() {
     }
   };
 
-  const myIP = (location) => {
+  const myIP = async (location) => {
+    console.log(location);
     const { latitude, longitude } = location.coords;
-    getWeather([latitude, longitude]);
+    const apiKey = import.meta.env.VITE_API_KEY_MAP;
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const ciudad = data.features[0].context.find((item) =>
+      item.id.includes("place")
+    ).text;
+    getWeather(ciudad);
   };
 
   return (
@@ -76,7 +86,7 @@ function App() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      <div className="form-container flex max-[1003px]:w-screen flex-col  w-101 h-screen w-1/4 py-20 px-10 ">
+      <div className="form-container flex max-[1003px]:w-full flex-col  w-101 h-screen w-1/4 py-20 px-10 ">
         <div className="flex items-center justify-center">
           <button
             className="my-auto mr-auto text-xl text-white font-medium shadow-md py-1 px-3 
@@ -85,12 +95,18 @@ function App() {
           >
             Seach for places
           </button>
-          <div className="  bg-opacity-30 ">
+          <div
+            className="  bg-opacity-30 "
+            // onClick={() => {
+            //   handlePosition();
+            // }}
+            onClick={() => {
+              navigator.geolocation.getCurrentPosition(myIP);
+            }}
+          >
             <button
-              className=" cursor-pointer items-center rounded-full w-12 h-12 text-center bg-gray-600"
-              onClick={() => {
-                navigator.geolocation.getCurrentPosition(myIP);
-              }}
+              className=" cursor-pointer items-center  rounded-full w-12 h-12 text-center bg-gray-600"
+              aria-hidden="true"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -194,9 +210,9 @@ function App() {
         </div>
       </div>
       {/* info card section  */}
-      <div className="w-3/4 flex flex-col max-[1003px]:w-full max-[1003px]:px-8 max-[1003px]:py-2 max-[1003px]:h-full justify-between px-20 py-10 bg-color-total-info h-screen bg-color-card-info">
+      <div className="w-3/4 flex flex-col max-[1003px]:w-full max-[1003px]:px-8 max-[1003px]:py-2 min-[1003px]:h-screen justify-between px-40 py-16 bg-color-total-info  bg-color-card-info w">
         <IconHeader />
-        <div className="flex flex-col my-3">
+        <div className="flex flex-col my-10">
           {/* card jsx  */}
           {weatherData.length === 0 ? (
             <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
@@ -204,20 +220,20 @@ function App() {
             </div>
           ) : (
             <>
-              <ul className="grid grid-cols-5 max-[1003px]:px-8 max-[1003px]:grid-cols-2 gap-4">
+              <ul className="grid grid-cols-5  max-[1003px]:px-8 max-[1003px]:grid-cols-2 gap-4">
                 {weatherData.list.map((days, index) => {
                   return <SummaryCard key={index} day={days} />;
                 })}
               </ul>
 
-              <h1 className="font-bold text-2xl max-[1003px]:mt-11 mb-8">
+              <h1 className="font-bold flex text-2xl max-[1003px]:mt-11 mt-40 mb-8 max-[1080px]:mt-20">
                 Today’s Hightlights
               </h1>
               <DetailCard weather_icon={weatherIcon} data={weatherData} />
             </>
           )}
         </div>
-        <footer className="font-bold text-2xl creation-footer text-center">
+        <footer className="font-bold text-2xl creation-footer  text-center">
           created by username - devChallenges.io
         </footer>
       </div>
