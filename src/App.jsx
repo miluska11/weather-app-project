@@ -78,7 +78,7 @@ function App() {
   };
 
   return (
-    <div className="flex max-[2006px]:flex max-[1003px]:flex-col">
+    <div className="flex max-[2006px]:flex max-[1003px]:flex-col ">
       {/* form card section  */}
       <SideBarSearch
         open={open}
@@ -212,7 +212,7 @@ function App() {
       {/* info card section  */}
       <div className="w-3/4 flex flex-col max-[1003px]:w-full max-[1003px]:px-8 max-[1003px]:py-2 min-[1003px]:h-screen justify-between px-40 py-16 bg-color-total-info  bg-color-card-info w">
         <IconHeader />
-        <div className="flex flex-col my-10">
+        <div className="flex flex-col my-4">
           {/* card jsx  */}
           {weatherData.length === 0 ? (
             <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
@@ -226,7 +226,7 @@ function App() {
                 })}
               </ul>
 
-              <h1 className="font-bold flex text-2xl max-[1003px]:mt-11 mt-40 mb-8 max-[1080px]:mt-20">
+              <h1 className="font-bold flex text-2xl max-[1003px]:mt-11 mt-16 mb-8 max-[1080px]:mt-20">
                 Today’s Hightlights
               </h1>
               <DetailCard weather_icon={weatherIcon} data={weatherData} />
