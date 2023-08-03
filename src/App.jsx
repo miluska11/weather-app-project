@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DetailCard from "./components/DetailCard";
 import IconHeader from "./components/IconHeader";
 import SummaryCard from "./components/SummaryCard";
@@ -12,12 +12,13 @@ function App() {
 
   const [noData, setNoData] = useState("No Data");
   const [searchTerm, setSearchTerm] = useState("");
-  const [weatherData, setWeatherData] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
+  console.log(weatherData);
   const [open, setOpen] = useState(false);
   const [city, setCity] = useState("Unknown location");
-  const [weatherIcon, setWeatherIcon] = useState(
-    `${import.meta.env.VITE_APP_ICON_URL}10n@2x.png`
-  );
+  const [weatherIcon, setWeatherIcon] = useState("clear.png");
+  console.log(weatherIcon);
+
   const handleClick = () => {
     setOpen();
   };
@@ -26,13 +27,13 @@ function App() {
     e.preventDefault();
     getWeather(searchTerm);
   };
-  const handlePosition = () => {
-    getWeather("lima");
-  };
+
   const handleChange = (input) => {
     const { value } = input.target;
     setSearchTerm(value);
   };
+
+
 
   const getWeather = async (location) => {
     setWeatherData([]);
@@ -40,7 +41,6 @@ function App() {
       typeof location === "string"
         ? `q=${location}`
         : `lat=${location[0]}&lon=${location[1]}`;
-    console.log(how_to_search);
     try {
       let res = await fetch(`${
         import.meta.env.VITE_REACT_APP_URL + how_to_search
@@ -54,18 +54,40 @@ function App() {
       }
       setWeatherData(data);
       setCity(`${data.city.name}, ${data.city.country}`);
-      setWeatherIcon(
-        `${
-          import.meta.env.VITE_APP_ICON_URL + data.list[0].weather[0]["icon"]
-        }@4x.png`
-      );
+
+      const weatherIconCode = data.list[0].weather[0]["icon"];
+      const imageName = getWeatherImageFileName(weatherIconCode);
+      setWeatherIcon(imageName);
     } catch (error) {
       console.log(error);
     }
   };
+  const getWeatherImageFileName = (iconCode) => {
+    const iconMap = {
+      "01d": "clear.png",
+      "01n": "clear.png",
+      "02d": "LightCloud.png",
+      "02n": "LightCloud.png",
+      "03d": "HeavyCloud.png",
+      "03n": "HeavyCloud.png",
+      "04d": "LightCloud.png",
+      "04n": "LightCloud.png",
+      "09d": "HeavyRain.png",
+      "09n": "HeavyRain.png",
+      "10d": "LightRain.png",
+      "10n": "LightRain.png",
+      "11d": "Thunderstorm.png",
+      "11n": "Thunderstorm.png",
+      "13d": "Snow.png",
+      "13n": "Snow.png",
+      "50d": "HeavyCloud.png",
+      "50n": "HeavyCloud.png",
+    };
 
+    // Si el código de icono no se encuentra en el objeto de mapeo, devuelve "clear.png" por defecto
+    return iconMap[iconCode] || "clear.png";
+  };
   const myIP = async (location) => {
-    console.log(location);
     const { latitude, longitude } = location.coords;
     const apiKey = import.meta.env.VITE_API_KEY_MAP;
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`;
@@ -77,16 +99,22 @@ function App() {
     getWeather(ciudad);
   };
 
+  useEffect(() => {
+    // Usar navigator.geolocation.getCurrentPosition para obtener la ubicación del usuario
+    navigator.geolocation.getCurrentPosition(myIP);
+  }, []);
   return (
-    <div className="flex max-[2006px]:flex max-[1003px]:flex-col ">
+    <div className="flex justify-center max-w-[3241px] max-w-[1003px]:flex max-[1003px]:flex-col max-[375px]:flex-col h-full min-h-screen">
       {/* form card section  */}
       <SideBarSearch
         open={open}
         handleClick={handleClick}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        onButtonHover={getWeather}
       />
-      <div className="form-container flex max-[1003px]:w-full flex-col  w-101 h-screen w-1/4 py-20 px-10 ">
+      {/* w-3/4 flex flex-col max-w-[1003px] px-8 py-2 min-h-screen justify-between bg-color-total-info bg-color-card-info */}
+      <div className="form-container flex max-w-[3241px] max-[1003px]:w-full flex-col min-h-screen w-1/4 py-20 px-10 ">
         <div className="flex items-center justify-center">
           <button
             className="my-auto mr-auto text-xl text-white font-medium shadow-md py-1 px-3 
@@ -132,44 +160,38 @@ function App() {
         </div>
         {/* ICON */}
         <div className="text-center my-auto">
-          {weatherData.length === 0 ? (
+          {weatherData === null ? (
             <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
               <h1 className="text-gray-300 text-4xl font-bold uppercase">
-                {noData}
+                Cargando...
               </h1>
             </div>
           ) : (
-            <>
-              <IconWeather weather_icon={weatherIcon} data={weatherData} />
-            </>
+            <IconWeather weather_icon={weatherIcon} data={weatherData} />
           )}
         </div>
         {/* temperatura */}
         <div className="text-center my-auto">
-          {weatherData.length === 0 ? (
+          {weatherData === null ? (
             <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
               <h1 className="text-gray-300 text-4xl font-bold uppercase">
-                {noData}
+                Cargando...
               </h1>
             </div>
           ) : (
-            <>
-              <Temperature weather_icon={weatherIcon} data={weatherData} />
-            </>
+            <Temperature weather_icon={weatherIcon} data={weatherData} />
           )}
         </div>
         {/* descripcion */}
         <div className="text-center my-auto">
-          {weatherData.length === 0 ? (
+          {weatherData === null ? (
             <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
               <h1 className="text-gray-300 text-4xl font-bold uppercase">
-                {noData}
+                Cargando...
               </h1>
             </div>
           ) : (
-            <>
-              <DescripcionTemp weather_icon={weatherIcon} data={weatherData} />
-            </>
+            <DescripcionTemp weather_icon={weatherIcon} data={weatherData} />
           )}
         </div>
         <div className="flex flex-col items-center justify-center"></div>
@@ -210,30 +232,47 @@ function App() {
         </div>
       </div>
       {/* info card section  */}
-      <div className="w-3/4 flex flex-col max-[1003px]:w-full max-[1003px]:px-8 max-[1003px]:py-2 min-[1003px]:h-screen justify-between px-40 py-16 bg-color-total-info  bg-color-card-info w">
+      <div className="w-3/4 flex flex-col max-w-[3241px] px-8 py-2 max-[1003px]:w-full min-h-screen justify-between bg-color-total-info bg-color-card-info">
         <IconHeader />
-        <div className="flex flex-col my-4">
+        <div className="flex flex-col my-10">
           {/* card jsx  */}
-          {weatherData.length === 0 ? (
-            <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
-              <h1 className=" text-4xl font-bold uppercase">{noData}</h1>
-            </div>
-          ) : (
-            <>
-              <ul className="grid grid-cols-5  max-[1003px]:px-8 max-[1003px]:grid-cols-2 gap-4">
-                {weatherData.list.map((days, index) => {
-                  return <SummaryCard key={index} day={days} />;
-                })}
-              </ul>
+          {weatherData !== null ? (
+            weatherData.length === 0 ? (
+              <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
+                <h1 className=" text-4xl font-bold uppercase">{noData}</h1>
+              </div>
+            ) : (
+              <>
+                <ul className="grid grid-cols-5  max-[1003px]:px-8 max-[1003px]:grid-cols-2 gap-4">
+                  {weatherData.list.map((days, index) => {
+                    return (
+                      <SummaryCard
+                        key={index}
+                        day={days}
+                        weather_icon={getWeatherImageFileName(
+                          days.weather[0]["icon"]
+                        )}
+                      />
+                    );
+                  })}
+                </ul>
 
-              <h1 className="font-bold flex text-2xl max-[1003px]:mt-11 mt-16 mb-8 max-[1080px]:mt-20">
-                Today’s Hightlights
+                <h1 className="font-bold flex text-2xl max-[1003px]:mt-11 mt-40 mb-8">
+                  Today’s Hightlights
+                </h1>
+                <DetailCard weather_icon={weatherIcon} data={weatherData} />
+              </>
+            )
+          ) : (
+            // Mostrar "Cargando..." mientras weatherData es nulo
+            <div className="container p-4 flex items-center justify-center h-1/3 mb-auto">
+              <h1 className="text-gray-300 text-4xl font-bold uppercase">
+                Cargando...
               </h1>
-              <DetailCard weather_icon={weatherIcon} data={weatherData} />
-            </>
+            </div>
           )}
         </div>
-        <footer className="font-bold text-2xl creation-footer  text-center">
+        <footer className="font-bold text-2xl creation-footer text-center">
           created by username - devChallenges.io
         </footer>
       </div>

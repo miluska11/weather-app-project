@@ -1,4 +1,9 @@
-function IconWeather({ data }) {
+function Temperature({ data }) {
+  if (!data || !data.list || data.list.length === 0) {
+    // Si no hay datos disponibles, puedes mostrar un mensaje o retornar null
+    return null;
+  }
+
   const { main } = data.list[0];
   return (
     <>
@@ -9,4 +14,4 @@ function IconWeather({ data }) {
   );
 }
 
-export default IconWeather;
+export default Temperature;

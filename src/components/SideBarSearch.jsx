@@ -4,6 +4,7 @@ export function SideBarSearch({
   handleClick,
   handleSubmit,
   handleChange,
+  onButtonHover
 }) {
   return (
     <div className="form-container right-0 shadow-md">
@@ -53,12 +54,81 @@ export function SideBarSearch({
               <button
                 type="submit"
                 className="py-2 ml-3 px-4  bg-blue-600 text-white font-semibold  hover:bg-blue-500"
+
               >
                 <li aria-hidden="true" type="submit">
                   Search
                 </li>
               </button>
             </form>
+          </div>
+          <div className="flex flex-col justify-center text-button-static items-center w-full mt-12">
+            <button className="relative w-3/4  h-14 border border-transparent border-customColor transition duration-300"onClick={() => onButtonHover("london")} >
+              <span className="mr-2">London</span>
+              <span className="absolute inset-y-0 right-2 flex items-center">
+                <i className="fas fa-chevron-right text-white">
+                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6 border-customColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </i>
+              </span>
+            </button>
+            <button class="relative w-3/4  h-14 border border-transparent border-customColor transition duration-300 mt-12" onClick={() => onButtonHover("madrid")}>
+              <span className="mr-2">Madrid</span>
+              <span className="absolute inset-y-0 right-2 flex items-center">
+                <i className="fas fa-chevron-right text-white">
+                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6 border-customColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </i>
+              </span>
+            </button>
+            <button class="relative w-4/5 h-14 border border-transparent border-customColor text-button-static transition duration-300 mt-12" onClick={() => onButtonHover("Asia")}>
+              <span className="mr-2">Asia</span>
+              <span className="absolute inset-y-0 right-2 flex items-center">
+                <i className="fas fa-chevron-right text-white">
+                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6 border-customColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </i>
+              </span>
+            </button>
           </div>
         </div>
       </div>
